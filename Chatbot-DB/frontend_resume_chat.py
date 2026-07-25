@@ -20,7 +20,7 @@ def add_thread(thread_id):
 def load_conversations(thread_id):
     return workflow.get_state(config={'configurable': {'thread_id': thread_id}}).values['messages']
 
-CONFIG = {'configurable': {'thread_id': 'thread-1'}}
+# CONFIG = {'configurable': {'thread_id': 'thread-1'}}
 
 if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
@@ -35,6 +35,12 @@ add_thread(st.session_state['thread_id'])
 
 message_history = st.session_state['message_history']
 thread_id = st.session_state['thread_id']
+
+CONFIG= { 
+            'configurable': {'thread_id': thread_id},
+            'metadata': {'thread-id': st.session_state['thread_id']},
+            'run-name': 'chat_turn'
+        }
 
 
 st.sidebar.title('Langgraph Chatbot')
@@ -53,7 +59,7 @@ for thread_id in st.session_state['chat_threads']:
                 role = 'user'
             else:
                 role = 'assistant'
-            temp_messages.append({'role': role, 'content': messages.content})
+            temp_messages.append({'role': role, 'content': message.content})
 
         st.session_state['message_history'] = temp_messages
 
